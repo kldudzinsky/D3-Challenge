@@ -1,6 +1,6 @@
 //Charts: x: income, ys: poverty, age 
-//x labels: Poverty and age 
-// y label: Income 
+//y labels: Poverty and age 
+// x label: Income 
 //Scatter plot 1: Income v Poverty
 //scatter plot 2: income v Age 
 
@@ -28,47 +28,71 @@ var svg = d3
 
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
+//initial params
+var chosenXAxis = "income";
+//scale
+function xScale (data, chosenXAxis){
+    var xLinearScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d[chosenXAxis]), 
+                d3.max(data, d=>[chosenXAxis])
+            ])
+        .range([0,width])
+    return xLinearScale
+};
+//function update x-scale var upon click
+//function update xAxis var upon click
+//function update circles group with transition to new circles
+//function used for updating circles group w new toolTip
  //load csv 
 d3.csv("data.csv").then(function(data){
+    //if (err) throw err; 
     //format
         data.forEach(function(data){
             data.income = +data.income;
             data.age=+data.age;
-            data.poverty=+data.poverty;
+            //data.poverty=+data.poverty;
         });
-    //setting linear scales for income x, age y1 and poverty y2
-        var xLinearScale = d3.scaleLinear()
-            .domain(d3.extent(data, d=>d.income))
-            .range([0, width]);
-        var yLinearScaleAge= d3.sclaeLinear()
-            .domain(d3.max(data, d=>d.age))
+    
+    //xLinearScale function above CSV import
+        var xLinearScale = xScale(data, chosenXAxis);
+    //setting linear scales for age y1 and poverty y2
+        var yLinearScaleAge= d3.scaleLinear()
+            .domain([0,d3.max(data, d=>d.age)])
             .range([height, 0]);
         // var yLinearScalePoverty=d3.scaleLinear()
-        //     .domain(d3.max(data, d=>d.poverty))
+        //     .domain([0,d3.max(data, d=>d.poverty)])
         //     .range([height,0]);
-    //functions to pass scales in as arguments
+    //create initial axis functions
         var bottomAxis = d3.axisBottom(xLinearScale);
         var leftAxisAge = d3.axisLeft(yLinearScaleAge);
-        // var leftAxisPoverty = d3.axisLeft(yLinearScalePoverty);
+        //var leftAxisPoverty = d3.axisLeft(yLinearScalePoverty);
     //configure line function to plot coordinates
-    var LineA = d3.line()
-        .x(data => xLinearScale(data.income))
-        .y(data => yLinearScaleAge(data.age));
-    // var LineP= d3.line()
+    // var LineA = d3.line()
     //     .x(data => xLinearScale(data.income))
-    //     .y(data => yLinearScaleAge(data.poverty));
-    //append SVg path
-    chartGroup.append("path")
-        .attr("d". LineA(data))
-        .classed("scatter", true);
-    //append svg group element to chartgroup to create left axis
-    chartGroup/append("g")
-        .classed("axis", true)
-        .call(leftAxisAge)
-    chartGroup.append("g")
-        .classed("axis", true)
-        .attr("transform", `translate${height}`)
+    //     .y(data => yLinearScaleAge(data.age));
+            // var LineP= d3.line()
+            //     .x(data => xLinearScale(data.income))
+            //     .y(data => yLinearScaleAge(data.poverty));
+    //append x Axis
+    var xAxis = chartGroup.append("g")
+        .classed("active", true)
+        .attr("transform", `translate(0, ${height}`)
         .call(bottomAxis);
+    //append y axes
+    var YAAxis = chartGroup.append("g")
+        .call(leftAxisAge);
+            // var YPAxis = chartGroup.append("g")
+            //     .call(leftAxisPoverty);
+    //append initial circles
+    var circlesGroup = chartGroup.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d=> xLinearScale[d[chosenXAxis]])
+        .attr("cy", d=> yLinearScaleAge(d.age))
+        .attr("r",20)
+        .attr("fill", "blue")
+        .attr("opacity", ".5")
    }).catch(function(error){
        console.log(error)
    });
