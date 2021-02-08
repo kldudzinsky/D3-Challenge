@@ -78,11 +78,19 @@ d3.csv("data.csv").then(function(data){
         .attr("cy", d=> yLinearScaleAge(d.age))
         .attr("r",25)
         .attr("fill", "blue")
-        .attr("opacity", ".5")   
-        //.attr("text", d=> d.abbr)     
-
-
+        .attr("opacity", ".5")       
+        //circle abbr labels
+        chartGroup.selectAll(".myLabel")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "myLabel")
+        .text((d) => (d.abbr))
+        .attr("x", d=> xLinearScale(d.income))
+        .attr("y", d=> yLinearScaleAge(d.age))
      });
+     
+        
 //axes labels
    var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -102,3 +110,5 @@ d3.csv("data.csv").then(function(data){
     .attr("value", "income") 
     .text("Income");
     
+
+       
