@@ -76,9 +76,12 @@ d3.csv("data.csv").then(function(data){
         .append("circle")
         .attr("cx", d=> xLinearScale(d.income))
         .attr("cy", d=> yLinearScaleAge(d.age))
-        .attr("r",20)
+        .attr("r",25)
         .attr("fill", "blue")
-        .attr("opacity", ".5")
+        .attr("opacity", ".5")   
+        //.attr("text", d=> d.abbr)     
+
+
      });
 //axes labels
    var labelsGroup = chartGroup.append("g")
