@@ -80,12 +80,14 @@ d3.csv("../Bonus_Homework/assets/data/data.csv").then(function(data,err){
     if (err) throw err;
     //format
         data.forEach(function(data){
-            //plot 1
+            //x axis
             data.income = +data.income;
+            data.smokes = +data.poverty
+            data.age = +data.age
+            //yaxis
             data.healthcare = + data.healthcare;
-            //plot 2
-            data.smokes = +data.smokes
-            data.poverty = +data.poverty;
+            data.poverty = +data.obesity;
+            data.obesity=+data.obesity;
         });
     //x scale function 
         function xScale (data){
@@ -136,30 +138,47 @@ d3.csv("../Bonus_Homework/assets/data/data.csv").then(function(data,err){
     //group for 2 x-axis labels
         var labelsGroup = chartGroup.append("g")
                     .attr("transform", `translate(${width / 2}, ${height + 20})`);
+        //xlabels
         var incomeLabelX= labelsGroup.append("text")
             .attr("x", 0)
             .attr("y", 20)
             .attr("value", "income") 
             .classed("active", true) 
-            .text("Income")
-        var healthcareLabelY= labelsGroup.append("text")
-            .attr("x", 0)
-            .attr("y", 40)
-            .attr("value", "healthcare") 
-            .classed("active", true) 
-            .text("HealthCare Percentage")
-        var smokesLabelY= labelsGroup.append("text")
-            .attr("x", 0)
-            .attr("y", 20)
-            .attr("value", "smokes") 
-            .classed("inactive", true) 
-            .text("Smoke Percentage")
+            .text("House Hold Income (Median)")
         var povertyLabelX= labelsGroup.append("text")
             .attr("x", 0)
             .attr("y", 40)
             .attr("value", "income") 
             .classed("inactive", true) 
-            .text("Poverty Percentage")
+            .text("In Poverty Percentage")  
+        var ageLabelX= labelsGroup.append("text")
+            .attr("x", 0)
+            .attr("y", 40)
+            .attr("value", "age") 
+            .classed("inactive", true) 
+            .text("Age(Median)")
+        //y labels 
+        var healthcareLabelY= labelsGroup.append("text")
+            .attr("x", 0)
+            .attr("y", 40)
+            .attr("value", "healthcare") 
+            .classed("active", true) 
+            .text("Lack of HealthCare (%)")
+        var smokesLabelY= labelsGroup.append("text")
+            .attr("x", 0)
+            .attr("y", 20)
+            .attr("value", "smokes") 
+            .classed("inactive", true) 
+            .text("Smokes (%)")
+        var povertyLabelX= labelsGroup.append("text")
+            .attr("x", 0)
+            .attr("y", 40)
+            .attr("value", "obesity") 
+            .classed("inactive", true) 
+            .text("Obesity (%)")
+        
+        
+        
 
             
     var circlesGroup = updateToolTip(chosenXAxis, circlesGroup); 
@@ -188,6 +207,8 @@ d3.csv("../Bonus_Homework/assets/data/data.csv").then(function(data,err){
                             .classed("active", false)
                             .classed("inactive", true);
                         }
+                    else{}
+                    else{}
                     else{
                         incomeLabelX
                             .classed("active", false)
