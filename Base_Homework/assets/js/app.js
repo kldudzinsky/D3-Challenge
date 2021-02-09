@@ -1,10 +1,4 @@
-//Charts: x: income, ys: poverty, age 
-//y labels: Poverty and age 
-// x label: Income 
-//Scatter plot 1: Income v Poverty
-//scatter plot 2: income v Age 
-
-
+//Base Homework
 //set up chart
 var svgWidth = 960;
 var svgHeight = 500;
@@ -21,7 +15,7 @@ var height = svgHeight - margin.top - margin.bottom;
 
 //create SVG Wrapper
 var svg = d3
-    .select("body")
+    .select("#scatter")
     .append("svg")
     .attr("width", svgWidth)
     .attr("height", svgHeight);
@@ -33,14 +27,14 @@ var chosenXAxis = "income";
 //scale
 function xScale (data){
     var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(data, d => d.income), 
-                d3.max(data, d=>d.income)
+        .domain([(d3.min(data, d => d.income))/1.05, 
+                (d3.max(data, d=>d.income))*1.05
             ])
         .range([0,width])
     return xLinearScale
 };
 //load and read CSV 
-d3.csv("data.csv").then(function(data){
+d3.csv("../Base_Homework/assets/data/data.csv").then(function(data){
     //if (err) throw err; 
     //format
         data.forEach(function(data){
@@ -53,7 +47,7 @@ d3.csv("data.csv").then(function(data){
         var xLinearScale = xScale(data);
     //setting linear scales for age y1 and poverty y2
         var yLinearScaleAge= d3.scaleLinear()
-            .domain([20,d3.max(data, d=>d.age)])
+            .domain([20,(d3.max(data, d=>d.age)*1.05)])
             .range([height, 0]);
        
     //create initial axis functions
@@ -70,6 +64,8 @@ d3.csv("data.csv").then(function(data){
         .call(leftAxisAge);
     
     //append initial circles
+    var abbrXoffset = -10;
+    var abbrYoffset= 4;
     var circlesGroup = chartGroup.selectAll("circle")
         .data(data)
         .enter()
@@ -86,8 +82,9 @@ d3.csv("data.csv").then(function(data){
         .append("text")
         .attr("class", "myLabel")
         .text((d) => (d.abbr))
-        .attr("x", d=> xLinearScale(d.income))
-        .attr("y", d=> yLinearScaleAge(d.age))
+        .attr("x", d=> xLinearScale(d.income)+abbrXoffset)
+        .attr("y", d=> yLinearScaleAge(d.age)+abbrYoffset)
+    
      });
      
         
